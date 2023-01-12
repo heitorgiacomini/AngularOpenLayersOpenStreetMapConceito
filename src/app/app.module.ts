@@ -5,12 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TestemapComponent } from './testemap/testemap.component';
 import { MapComponent } from './map/map.component';
+import { MapCircleComponent } from './map-circle/map-circle.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TestemapComponent,
-    MapComponent
+    MapComponent,
+    MapCircleComponent
   ],
   imports: [
     BrowserModule,

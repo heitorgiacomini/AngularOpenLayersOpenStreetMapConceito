@@ -1,52 +1,4 @@
-// import { Component, Input } from '@angular/core';
-// import { Map, View } from 'ol';
-// import { Point } from 'ol/geom';
-// import { MultiLineString } from 'ol/geom';
-// import TileLayer from 'ol/layer/Tile';
-// import VectorLayer from 'ol/layer/Vector';
-// import OSM from 'ol/source/OSM';
-// import VectorSource from 'ol/source/Vector';
 
-// @Component({
-//   selector: 'testemap',
-//   template: `
-//     <div id="map"></div>
-//   `,
-//   styles: [`
-//     #map {
-//       height: 500px;
-//       width: 100%;
-//     }
-//   `]
-// })
-// export class TestemapComponent {
-//   @Input() point: Point;
-//   @Input() lines: MultiLineString;
-
-//   map: Map;
-
-//   ngOnInit() {
-//     const vectorSource = new VectorSource({
-//       features: [this.point, this.lines]
-//     });
-
-//     this.map = new Map({
-//       target: 'map',
-//       layers: [
-//         new TileLayer({
-//           source: new OSM()
-//         }),
-//         new VectorLayer({
-//           source: vectorSource
-//         })
-//       ],
-//       view: new View({
-//         center: this.point.getCoordinates(),
-//         zoom: 10
-//       })
-//     });
-//   }
-// }
 
 import { Component, Input } from '@angular/core';
 import { fromLonLat } from 'ol/proj';
@@ -66,7 +18,7 @@ import Proj4, { TemplateCoordinates } from 'proj4';
     `
       .map {
         height: 800px;
-        width: 800px;
+        width: 100%;
       }
     `,
   ],
