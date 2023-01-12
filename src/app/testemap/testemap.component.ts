@@ -94,7 +94,7 @@ export class TestemapComponent {
     this.map = new Map({
       view: new View({
         center: [x, y],
-        zoom: 12,
+        zoom: 2,
       }),
       layers: [
         new TileLayer({
@@ -110,29 +110,68 @@ export class TestemapComponent {
     let ml = new MultiLineString(
       [
         [
-          [-21.67322142286088, -49.74738957032327],
-          [9000000, 50],
-          [120, 9000000],
+          [ -21.67322142286088, -49.74738957032327],//coordenada de lins conforme vem no google
+          [ -49.74738957032327, -21.67322142286088],//coordenada de lins invertida
+          [ -46.63330, -23.55052],
         ],
         [
-          [-44444, -8999999],
-          [-400040, -4040034],
-          [-23423423, -6575650],
+          [-49.74738957032327, -21.67322142286088],
+          [-70.023015, -9.136274],//coordenada do acre invertida -9.136274, -70.023015
         ],
       ]
     );
 
-    const sourceCrsDef = Proj4.defs('WGS84'); // define the source CRS as a ProjectionDefinition object
-    const targetCrsDef = Proj4.defs('EPSG:3857'); // define the target CRS as a ProjectionDefinition object
+    console.log(ml.getCoordinates());
+    console.log(ml);
 
-    const targetCrs = Proj4.Proj(targetCrsDef);
+    // for (let i = 0; i < ml.getCoordinates().length; i++) {
+    //   for (let j = 0; j < ml.getCoordinates()[i].length; j++) {
+    //       // ml.getCoordinates()[i][j] = fromLonLat(ml.getCoordinates()[i][j]);
+    //       ml.getCoordinates()[i][j] = Proj4(Proj4.WGS84, epsg3857, [ ml.getCoordinates()[i][j][0], ml.getCoordinates()[i][j][1]]);
+    //       ml.getCoordinates()[i][j](Proj4(Proj4.WGS84, epsg3857, [ ml.getCoordinates()[i][j][0], ml.getCoordinates()[i][j][1]]));
+    //       ml[i][j] = (Proj4(Proj4.WGS84, epsg3857, [ ml.getCoordinates()[i][j][0], ml.getCoordinates()[i][j][1]]));
 
-    interface Proj4Proj {
-      (def: string): typeof Proj4.Proj;
+    //       console.log(ml.getCoordinates()[i][j]);
+    //       console.log(Proj4(Proj4.WGS84, epsg3857, [ ml.getCoordinates()[i][j][0], ml.getCoordinates()[i][j][1]]));
+    //     }
+    // }
+
+    let newCoordinates = [];
+    for (let i = 0; i < ml.getCoordinates().length; i++) {
+        let line = [];
+        for (let j = 0; j < ml.getCoordinates()[i].length; j++) {
+            line.push(fromLonLat(ml.getCoordinates()[i][j]));
+        }
+        newCoordinates.push(line)
     }
-    //const sourceCrsDef = Proj4.defs('WGS84'); // define the source CRS as a ProjectionDefinition object
-    const targetCrsDefx = Proj4.defs('EPSG:3857'); // define the target CRS as a ProjectionDefinition object
+    ml.setCoordinates(newCoordinates);
+    console.log(ml.getCoordinates());
 
+    let feature = new Feature({
+      id: 'my-feature',
+      geometry: ml,
+    });
+
+    let source = new VectorSource({
+      features: [feature],
+    });
+
+    let vectorLayer = new VectorLayer({
+      source: source,
+    });
+
+    this.map.addLayer(vectorLayer);
+    const features = source.getFeatures();
+
+    // const sourceCrsDef = Proj4.defs('WGS84'); // define the source CRS as a ProjectionDefinition object
+    // const targetCrsDef = Proj4.defs('EPSG:3857'); // define the target CRS as a ProjectionDefinition object
+
+    // const targetCrs = Proj4.Proj(targetCrsDef);
+    // interface Proj4Proj {
+    //   (def: string): typeof Proj4.Proj;
+    // }
+    // //const sourceCrsDef = Proj4.defs('WGS84'); // define the source CRS as a ProjectionDefinition object
+    // const targetCrsDefx = Proj4.defs('EPSG:3857'); // define the target CRS as a ProjectionDefinition object
     // const templateCoordinates = ml.map((line: any[]) => ({
     //   x: line[0],
     //   y: line[1],
@@ -158,23 +197,9 @@ export class TestemapComponent {
     // );
 
     // Create a Feature with the random MultiLineString
-    let feature = new Feature({
-      id: 'my-feature',
-      geometry: ml,
-    });
-
-    let source = new VectorSource({
-      features: [feature],
-    });
-
-    let vectorLayer = new VectorLayer({
-      source: source,
-    });
-
-    this.map.addLayer(vectorLayer);
 
     // Get the features from the VectorSource
-    const features = source.getFeatures();
+
 
     // // Set the id of the Feature
     // feature.setId('my-feature');
